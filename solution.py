@@ -16,10 +16,13 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 load_dotenv()
-client = OpenAI(
-    api_key=os.getenv("OPENAI_API_KEY"),
-    base_url="https://openrouter.ai/api/v1",
-)
+
+
+def get_client():
+    return OpenAI(
+        api_key=os.getenv("OPENAI_API_KEY"),
+        base_url="https://openrouter.ai/api/v1",
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -62,7 +65,7 @@ def call_openai(
         client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     """
     # TODO: import OpenAI, create client, call chat.completions.create,
-
+    client = get_client()
     start_time = time.time()
     response = client.chat.completions.create(
         model=model,
@@ -175,7 +178,7 @@ def streaming_chatbot() -> None:
         - Trim history to the last 3 turns: history = history[-3:]
     """
     # TODO: enter while-loop, read user input, stream response, maintain history
-
+    client = get_client()
     history = []
 
     while True:
