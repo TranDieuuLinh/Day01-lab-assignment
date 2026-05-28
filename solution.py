@@ -270,7 +270,12 @@ def batch_compare(prompts: list[str]) -> list[dict]:
         key "prompt" containing the original prompt string.
     """
     # TODO: iterate over prompts, call compare_models, add "prompt" key
-    raise NotImplementedError("Implement batch_compare")
+    results = []
+    for prompt in prompts:
+        result = compare_models(prompt)
+        result["prompt"] = prompt
+        results.append(result)
+    return results
 
 
 # ---------------------------------------------------------------------------
@@ -291,7 +296,17 @@ def format_comparison_table(results: list[dict]) -> str:
         Truncate long text to 40 characters for readability.
     """
     # TODO: build and return a formatted table string
-    raise NotImplementedError("Implement format_comparison_table")
+    header = f"{'Prompt':<42} {'GPT-4o':<42} {'Mini':<42} {'4o Latency':>12} {'Mini Latency':>12}"
+    rows = [header, "-" * len(header)]
+    for r in results:
+        rows.append(
+            f"{r['prompt'][:40]:<42} "
+            f"{r['gpt4o_response'][:40]:<42} "
+            f"{r['mini_response'][:40]:<42} "
+            f"{r['gpt4o_latency']:.2f}s{'':>10} "
+            f"{r['mini_latency']:.2f}s"
+        )
+    return "\n".join(rows)
 
 
 # ---------------------------------------------------------------------------
